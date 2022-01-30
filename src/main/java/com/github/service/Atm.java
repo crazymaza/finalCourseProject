@@ -61,7 +61,7 @@ public class Atm implements MoneyService {
         System.out.println("Выберите продукт по которому хотите узнать баланс:");
 
         AtomicInteger count = new AtomicInteger(1);
-        client.getProductSet().forEach(item -> {
+        client.getProducts().forEach(item -> {
             productMap.put(count.getAndIncrement(), item);
         });
 
