@@ -11,7 +11,6 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -25,17 +24,6 @@ public class Atm implements MoneyService {
     private final CardRepository cardRepository;
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public void runSession(String token) {
-        Client client = clientRepository.findClientByToken(token);
-//        Product chosenProduct = chooseClientProduct(client);
-//        showProductBalance(chosenProduct);
-        try {
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public long getProductBalance(Product product) {
         if (product == null) throw new IllegalArgumentException("Product can't be null");
@@ -44,8 +32,7 @@ public class Atm implements MoneyService {
 
     public Optional<String> checkClient(String login, int password) {
         Optional<Client> client = Optional.ofNullable(clientRepository.findClientByLogin(login));
-        assert client.isPresent();
-        if (password == client.get().getPassword()) {
+        if (password == client.orElseGet(Client::new).getPassword()) {
             log.info("Client with login {} found in database.", login);
             String authData = login + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(authData.getBytes(StandardCharsets.US_ASCII));
@@ -59,9 +46,5 @@ public class Atm implements MoneyService {
 
     public Set<Card> chooseClientProduct(Login client) {
         return cardRepository.getAllByClientId(client.getLogin(), client.getPassword());
-    }
-
-    private void showProductBalance(Product product) {
-        System.out.println("Balance is " + getProductBalance(product));
     }
 }
