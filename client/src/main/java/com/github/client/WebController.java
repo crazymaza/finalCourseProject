@@ -6,7 +6,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -37,7 +36,6 @@ public class WebController {
         Set<Card> cardSet = restTemplate.postForEntity(URL, requestEntity,
                 Set.class, Card.class).getBody();
 
-        System.out.println(cardSet);
         model.addAttribute("cards", cardSet);
         return "show";
     }
