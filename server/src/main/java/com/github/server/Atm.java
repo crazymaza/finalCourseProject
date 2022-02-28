@@ -22,7 +22,6 @@ import java.util.Set;
 public class Atm implements MoneyService {
     private final ClientRepository clientRepository;
     private final CardRepository cardRepository;
-    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     @Override
     public long getProductBalance(Product product) {
